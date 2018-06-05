@@ -12,7 +12,7 @@
 -include("head.hrl").
 
 %% API
--export([print_events/1, count_measurements/1, dom/1, callback/2, react_for_events/1, parse_from_dom/1, bind/2, bind_test/1, bind_test2/1]).
+-export([print_events/1, count_measurements/1, dom/1, callback/2, react_for_events/1, parse_from_dom/1, bind/2, bind_test/1, bind_test2/1, parse_params/1]).
 
 
 
@@ -96,6 +96,14 @@ bind_test2(BIND) ->
   io:format("x: ~p~n", [H#'document/measurement'.x]),
   io:format("y: ~p~n", [H#'document/measurement'.y]),
   io:format("Value: ~p~n", [H#'document/measurement'.value]).
+
+parse_params(Head) ->
+
+  Head#'document/measurement'{ value = element(1, string:to_integer(Head#'document/measurement'.value)),
+    x = element(1, string:to_float(Head#'document/measurement'.x)),
+    y = element(1, string:to_float(Head#'document/measurement'.y)),
+    time = list_to_tuple(lists:map(fun (X)-> element(1,string:to_integer(X)) end, (string:split(Head#'document/measurement'.time, ":")))),
+    date = list_to_tuple(lists:reverse(lists:map(fun (X)-> element(1,string:to_integer(X)) end, (string:split(Head#'document/measurement'.date, "-", all)))))}.
 
 
 
